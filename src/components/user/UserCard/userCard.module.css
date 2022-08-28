@@ -1,0 +1,25 @@
+.userCard{
+    border: 1px solid gray;
+    padding: 10px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.userCard ul {
+list-style: none;
+}
+
+.delBtn{
+    width:25px;
+    height:25px;
+    background-color: brown;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    top:5px;
+    right:5px;
+    cursor: pointer;
+
+}
