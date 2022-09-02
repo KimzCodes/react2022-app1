@@ -7,17 +7,24 @@ function Lightbox({ children, closeHandler }) {
   };
 
   return (
-    <div className={styles.lightBox} onClick={closeLightbox}>
-      <Container sizeSmall customStyles={{ backgroundColor: "white" }}>
+    <>
+      <div className={styles.lightBox} onClick={closeLightbox}></div>
+      <Container
+        sizeSmall
+        customStyles={{
+          backgroundColor: "white",
+          position: "absolute",
+          zIndex: 15,
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
         <button onClick={closeLightbox}>Close</button>
         {children}
       </Container>
-    </div>
+    </>
   );
 }
 
 export default Lightbox;
-
-<div className="lightbox">
-  <div className="container"></div>
-</div>;
