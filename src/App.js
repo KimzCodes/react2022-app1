@@ -8,7 +8,7 @@ const App = () => {
   const [search, setSearchInput] = useState("");
   const [toggleLightBox, setToggleLightBox] = useState(false);
   const [names, setName] = useState([
-    { id: 111, name: "mina", address: "giza", phone: "12341", gender: "male" },
+    { id: 111, name: "reham", address: "doki", phone: "12341", gender: "male" },
 
     { id: 1, name: "mina", address: "cairo", phone: "12341", gender: "male" },
     { id: 2, name: "kareem", address: "giza", phone: "12234", gender: "male" },
@@ -25,7 +25,19 @@ const App = () => {
     setName(names.filter((el) => el.id !== id));
   };
 
-  const insertHandler = (data) => {
+  const updateHandler = (data) => {
+    setName((prevState) =>
+      prevState.map((el) => {
+        if (el.id === data.id) {
+          return { ...data };
+        }
+        return { ...el };
+      })
+    );
+    console.log(names);
+  };
+
+  const dataHandler = (data) => {
     setName([...names, data]);
   };
 
@@ -52,15 +64,16 @@ const App = () => {
 
         <Button onClick={toggleHandler}>Insert Name</Button>
 
-        <UserList names={namesHandler()} deleteHandler={deleteHandler} />
+        <UserList
+          names={namesHandler()}
+          deleteHandler={deleteHandler}
+          updateHandler={updateHandler}
+        />
       </Container>
 
       {toggleLightBox && (
         <Lightbox closeHandler={toggleHandler}>
-          <UserFrom
-            insertHandler={insertHandler}
-            closeHandler={toggleHandler}
-          />
+          <UserFrom insertHandler={dataHandler} closeHandler={toggleHandler} />
         </Lightbox>
       )}
     </>

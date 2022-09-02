@@ -23,3 +23,17 @@ list-style: none;
     cursor: pointer;
 
 }
+
+.updateBtn{
+    width:25px;
+    height:25px;
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    top:5px;
+    right:45px;
+    cursor: pointer;
+}
