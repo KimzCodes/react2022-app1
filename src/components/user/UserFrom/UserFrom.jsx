@@ -1,31 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../../layout";
 
-function UserFrom({ insertHandler, closeHandler }) {
+function UserFrom({ userHandler, closeHandler, selectedName }) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  const fromHandler = (e) => {
-    e.preventDefault();
-    insertHandler({
-      id: Date.now(),
-      name,
-      gender,
-      phone,
-      address,
-    });
+  useEffect(() => {
+    if (selectedName) {
+      setName(selectedName.name);
+      setGender(selectedName.gender);
+      setPhone(selectedName.phone);
+      setAddress(selectedName.address);
+    }
+  }, [selectedName]);
+
+  //first render
+  //useEffect
+  //clean up take place in memory
+
+  //second render
+  //invoke or fire clean up
+  //useEffect
+
+  //third render
+  //invoke or fire clean up
+  //useEffect
+
+  //fourth render
+  //invoke or fire clean up
+  //useEffect
+
+  const resetForm = () => {
     setName("");
     setGender("");
     setPhone("");
     setAddress("");
+  };
+
+  const fromHandler = (e) => {
+    e.preventDefault();
+    //
+    const operationType = selectedName ? "edit" : "insert";
+    userHandler(
+      {
+        id: selectedName ? selectedName.id : Date.now(),
+        name,
+        gender,
+        phone,
+        address,
+      },
+      operationType
+    );
+    resetForm();
     closeHandler();
   };
 
   return (
     <div>
-      <form onSubmit={fromHandler} className={`controller `}>
+      <form onSubmit={fromHandler} className={`controller`}>
         <Input
           label="name"
           name="name"
@@ -54,19 +88,8 @@ function UserFrom({ insertHandler, closeHandler }) {
           id="address"
           onChange={(e) => setAddress(e.target.value)}
         />
-        {/* <label htmlFor="name">Name:</label>
-        <input type="text" name="name" />
 
-        <label htmlFor="gender">gender:</label>
-        <input type="text" name="gender" ref={gender} />
-
-        <label htmlFor="phone">phone:</label>
-        <input type="text" name="phone" ref={phone} />
-
-        <label htmlFor="address">address:</label>
-        <input type="text" name="address" ref={address} /> */}
-
-        <input type="submit" value="Submit" />
+        <input type="submit" value={selectedName ? "Edit" : "Submit"} />
       </form>
     </div>
   );

@@ -1,12 +1,15 @@
 import styles from "./userCard.module.css";
 
 const UserCard = ({ name, gender, ...props }) => {
-  const { userCard, delBtn } = styles;
+  const { userCard, delBtn, editBtn } = styles;
 
   const deleteRecord = (id) => {
-    props.deleteHandler(id);
+    props.getId({ id, type: "delete" });
   };
 
+  const editRecord = (id) => {
+    props.getId({ id, type: "edit" });
+  };
   return (
     <div className={userCard}>
       <ul>
@@ -28,7 +31,11 @@ const UserCard = ({ name, gender, ...props }) => {
         </li>
       </ul>
       <div className={delBtn} onClick={() => deleteRecord(props.id)}>
-        x
+        Delete
+      </div>
+
+      <div className={editBtn} onClick={() => editRecord(props.id)}>
+        Edit
       </div>
     </div>
   );

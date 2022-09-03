@@ -8,7 +8,13 @@ const App = () => {
   const [search, setSearchInput] = useState("");
   const [toggleLightBox, setToggleLightBox] = useState(false);
   const [names, setName] = useState([
-    { id: 111, name: "mina", address: "giza", phone: "12341", gender: "male" },
+    {
+      id: 111,
+      name: "reham",
+      address: "doki",
+      phone: "1222341",
+      gender: "female",
+    },
 
     { id: 1, name: "mina", address: "cairo", phone: "12341", gender: "male" },
     { id: 2, name: "kareem", address: "giza", phone: "12234", gender: "male" },
@@ -20,17 +26,70 @@ const App = () => {
       gender: "female",
     },
   ]);
+  const [selectedName, setSelectedName] = useState();
 
-  const deleteHandler = async (id) => {
+  //every time
+  // useEffect(() => {
+  //   console.log("hi");
+  // });
+
+  //firt time only
+  // useEffect(() => {
+  //   console.log("hi");
+  // },[]);
+
+  // first time and every dependacny get update
+  // useEffect(() => {
+  //   console.log("search");
+
+  // }, [search]);
+
+  const getId = (payload) => {
+    switch (payload.type) {
+      case "delete":
+        deleteHandler(payload.id);
+        break;
+      case "edit":
+        selectUserHandler(payload.id);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const deleteHandler = (id) => {
     setName(names.filter((el) => el.id !== id));
   };
 
-  const insertHandler = (data) => {
-    setName([...names, data]);
+  const selectUserHandler = (id) => {
+    //get user data
+    const selectedUser = names.find((el) => el.id === id);
+    setSelectedName(selectedUser);
+    toggleHandler();
+  };
+
+  const userHandler = (data, type) => {
+    if (type === "insert") {
+      return setName([...names, data]);
+    }
+
+    setName(
+      names.map((el) => {
+        console.log(el);
+        if (el.id === data.id) {
+          return { ...data };
+        } else {
+          return { ...el };
+        }
+      })
+    );
   };
 
   const toggleHandler = () => {
     setToggleLightBox(!toggleLightBox);
+    if (toggleLightBox) {
+      setSelectedName();
+    }
   };
 
   const namesHandler = () => {
@@ -52,14 +111,15 @@ const App = () => {
 
         <Button onClick={toggleHandler}>Insert Name</Button>
 
-        <UserList names={namesHandler()} deleteHandler={deleteHandler} />
+        <UserList names={namesHandler()} getId={getId} />
       </Container>
 
       {toggleLightBox && (
         <Lightbox closeHandler={toggleHandler}>
           <UserFrom
-            insertHandler={insertHandler}
+            userHandler={userHandler}
             closeHandler={toggleHandler}
+            selectedName={selectedName}
           />
         </Lightbox>
       )}

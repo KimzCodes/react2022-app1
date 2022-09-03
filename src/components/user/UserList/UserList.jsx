@@ -1,8 +1,8 @@
 import UserCard from "../UserCard/UserCard";
 
-const UserList = ({ names, deleteHandler }) => {
+const UserList = ({ names, getId }) => {
   const namesLoop = names.map((el) => (
-    <UserCard key={el.id} {...el} deleteHandler={deleteHandler} />
+    <UserCard key={el.id} {...el} getId={getId} />
   ));
   return <>{namesLoop}</>;
 };
