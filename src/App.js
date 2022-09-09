@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { UserList, UserFrom } from "./components/user";
 import { Lightbox, Container, Input, Button } from "./components/layout";
 
@@ -28,45 +28,54 @@ const App = () => {
   ]);
   const [selectedName, setSelectedName] = useState();
 
-  //every time
-  // useEffect(() => {
-  //   console.log("hi");
-  // });
+  useEffect(() => {
+    if (selectedName && Object.keys(selectedName).length > 0) {
+      setToggleLightBox(true);
+    }
+  }, [selectedName]);
 
-  //firt time only
-  // useEffect(() => {
-  //   console.log("hi");
-  // },[]);
-
-  // first time and every dependacny get update
-  // useEffect(() => {
-  //   console.log("search");
-
-  // }, [search]);
-
-  const getId = (payload) => {
-    switch (payload.type) {
-      case "delete":
-        deleteHandler(payload.id);
-        break;
-      case "edit":
-        selectUserHandler(payload.id);
-        break;
-      default:
-        break;
+  const toggleHandler = () => {
+    setToggleLightBox(!toggleLightBox);
+    if (
+      toggleLightBox &&
+      selectedName &&
+      Object.keys(selectedName).length > 0
+    ) {
+      return setSelectedName();
     }
   };
 
-  const deleteHandler = (id) => {
-    setName(names.filter((el) => el.id !== id));
-  };
+  const deleteHandler = useCallback(
+    (id) => {
+      setName(names.filter((el) => el.id !== id));
+    },
+    [names]
+  );
 
-  const selectUserHandler = (id) => {
-    //get user data
-    const selectedUser = names.find((el) => el.id === id);
-    setSelectedName(selectedUser);
-    toggleHandler();
-  };
+  const selectUserHandler = useCallback(
+    (id) => {
+      //get user data
+      const selectedUser = names.find((el) => el.id === id);
+      setSelectedName(selectedUser);
+    },
+    [names]
+  );
+
+  const getId = useCallback(
+    (payload) => {
+      switch (payload.type) {
+        case "delete":
+          deleteHandler(payload.id);
+          break;
+        case "edit":
+          selectUserHandler(payload.id);
+          break;
+        default:
+          break;
+      }
+    },
+    [deleteHandler, selectUserHandler]
+  );
 
   const userHandler = (data, type) => {
     if (type === "insert") {
@@ -85,19 +94,12 @@ const App = () => {
     );
   };
 
-  const toggleHandler = () => {
-    setToggleLightBox(!toggleLightBox);
-    if (toggleLightBox) {
-      setSelectedName();
-    }
-  };
-
-  const namesHandler = () => {
+  const namesHandler = useMemo(() => {
     if (search.length > 0) {
       return names.filter((el) => el.name.includes(search));
     }
     return names;
-  };
+  }, [names, search]);
 
   return (
     <>
@@ -111,7 +113,7 @@ const App = () => {
 
         <Button onClick={toggleHandler}>Insert Name</Button>
 
-        <UserList names={namesHandler()} getId={getId} />
+        <UserList names={namesHandler} getId={getId} />
       </Container>
 
       {toggleLightBox && (
